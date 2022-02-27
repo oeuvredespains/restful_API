@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -8,19 +9,40 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type student struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
 // POST
 func createStudent(w http.ResponseWriter, r *http.Request) {
-	// TODO create something
+	// get data from the body
+	data := r.Body
+	// data to struct
+	s := student{}
+	// decode the data
+	err := json.NewDecoder(data).Decode(&s)
+	if err != nil {
+		fmt.Println(err)
+		// return error code
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	// TODO add student to DB
+	w.WriteHeader(http.StatusCreated)
 }
 
 // GET
 func getStudent(w http.ResponseWriter, r *http.Request) {
-	// TODO get something
+	// get ID from the url
+	vars := mux.Vars(r)
+	id := vars["id"]
+	// TODO get student from DB
 }
 
 // GET ALL
 func getAllStudent(w http.ResponseWriter, r *http.Request) {
-	// TODO get all students
+	// TODO get all students from DB
 }
 
 // PUT
@@ -30,7 +52,10 @@ func updateStudent(w http.ResponseWriter, r *http.Request) {
 
 // DELETE
 func deleteStudent(w http.ResponseWriter, r *http.Request) {
-	// TODO delete something
+	// get ID from the url
+	vars := mux.Vars(r)
+	id := vars["id"]
+	// TODO delete student from DB
 }
 
 // Homepage
